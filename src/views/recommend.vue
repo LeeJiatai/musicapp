@@ -1,5 +1,5 @@
 <template>
-	<div class="recommend">
+	<div class="recommend" v-loading:[loadingText]="loading">
 		<Scroll class="recommend-content">
 			<div>
 				<div class="slider-wrapper">
@@ -9,7 +9,7 @@
 				</div>
 
 				<div class="recommend-list">
-					<h1 class="list-title">热门歌单推荐</h1>
+					<h1 class="list-title" v-show="!loading">热门歌单推荐</h1>
 
 					<ul>
 						<li
@@ -49,7 +49,14 @@ export default {
 	data() {
 		return {
 			sliders: [],
-			albums: []
+			albums: [],
+			loadingText: '正在载入...'
+		}
+	},
+
+	computed: {
+		loading() {
+			return !this.sliders.length && !this.albums.length
 		}
 	},
 
