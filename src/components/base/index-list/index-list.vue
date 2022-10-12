@@ -2,6 +2,7 @@
     <Scroll
         class="index-list"
         :probeType="3"
+        ref="scrollRef"
         @scroll="onScroll"
     >
         <ul
@@ -35,7 +36,10 @@
             <div class="fixed-title">{{ fixedTitle }}</div>
         </div>
 
-        <div class="shortcut">
+        <div
+            class="shortcut"
+            @touchstart.stop.prevent="onShortcutTouchStart"
+        >
             <ul>
                 <li
                     class="item"
@@ -76,7 +80,7 @@ export default {
 
     setup(props) {
         const { groupRef, onScroll, fixedTitle, fixedStyle, currentIndex } = useFixed(props)
-        const { shortcutList } = useShortcuts(props)
+        const { shortcutList, onShortcutTouchStart, scrollRef } = useShortcuts(props, groupRef)
 
         return {
             groupRef,
@@ -84,7 +88,9 @@ export default {
             currentIndex,
             fixedTitle,
             fixedStyle,
-            shortcutList
+            shortcutList,
+            onShortcutTouchStart,
+            scrollRef
         }
     }
 }
