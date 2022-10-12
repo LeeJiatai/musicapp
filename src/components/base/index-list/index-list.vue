@@ -39,6 +39,8 @@
         <div
             class="shortcut"
             @touchstart.stop.prevent="onShortcutTouchStart"
+            @touchmove.stop.prevent="onShortcutTouchMove"
+            @touchend.stop.prevent
         >
             <ul>
                 <li
@@ -80,17 +82,20 @@ export default {
 
     setup(props) {
         const { groupRef, onScroll, fixedTitle, fixedStyle, currentIndex } = useFixed(props)
-        const { shortcutList, onShortcutTouchStart, scrollRef } = useShortcuts(props, groupRef)
+        const { shortcutList, onShortcutTouchStart, onShortcutTouchMove, scrollRef } = useShortcuts(props, groupRef)
 
         return {
+            // fixed
             groupRef,
             onScroll,
-            currentIndex,
             fixedTitle,
             fixedStyle,
+            currentIndex,
+            // shortcut
+            scrollRef,
             shortcutList,
             onShortcutTouchStart,
-            scrollRef
+            onShortcutTouchMove
         }
     }
 }
