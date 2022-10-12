@@ -34,12 +34,27 @@
         >
             <div class="fixed-title">{{ fixedTitle }}</div>
         </div>
+
+        <div class="shortcut">
+            <ul>
+                <li
+                    class="item"
+                    :class="{current: currentIndex === index}"
+                    v-for="(item, index) in shortcutList"
+                    :key="item"
+                    :data-index="index"
+                >
+                    {{ item }}
+                </li>
+            </ul>
+        </div>
     </Scroll>
 </template>
 
 <script>
 import Scroll from '@/components/base/scroll/scroll'
 import useFixed from './use-fixed'
+import useShortcuts from './use-shortcut'
 
 export default {
     name: 'index-list',
@@ -60,13 +75,16 @@ export default {
     },
 
     setup(props) {
-        const { groupRef, onScroll, fixedTitle, fixedStyle } = useFixed(props)
+        const { groupRef, onScroll, fixedTitle, fixedStyle, currentIndex } = useFixed(props)
+        const { shortcutList } = useShortcuts(props)
 
         return {
             groupRef,
             onScroll,
+            currentIndex,
             fixedTitle,
-            fixedStyle
+            fixedStyle,
+            shortcutList
         }
     }
 }
@@ -122,6 +140,28 @@ export default {
             font-size: $font-size-small;
             color: $color-text-l;
             background: $color-highlight-background;
+        }
+    }
+
+    .shortcut {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        padding: 20px 0;
+        border-radius: 10px;
+        text-align: center;
+        background: $color-background-d;
+        font-family: Helvetica;
+        .item {
+            padding: 3px;
+            line-height: 1;
+            color: $color-text-l;
+            font-size: $font-size-small;
+            &.current {
+                color: $color-theme
+            }
         }
     }
 }
