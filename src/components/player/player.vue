@@ -26,15 +26,15 @@
                         <i class="icon-sequence"></i>
                     </div>
 
-                    <div class="icon i-left">
+                    <div class="icon i-left" :class="disableCls">
                         <i class="icon-prev" @click="prev"></i>
                     </div>
 
-                    <div class="icon i-center">
+                    <div class="icon i-center" :class="disableCls">
                         <i :class="playIcon" @click="togglePlay"></i>
                     </div>
 
-                    <div class="icon i-right">
+                    <div class="icon i-right" :class="disableCls">
                         <i class="icon-next" @click="next"></i>
                     </div>
 
@@ -47,6 +47,8 @@
         <audio
             ref="audioRef"
             @pause="pause"
+            @canplay="ready"
+            @error="error"
         ></audio>
     </div>
 </template>
@@ -60,6 +62,7 @@ export default {
 
     setup() {
         const audioRef = ref(null)
+        const songReady = ref(false)
 
         const store = useStore()
         const fullScreen = computed(() => store.state.fullScreen)
@@ -67,6 +70,9 @@ export default {
         const playing = computed(() => store.state.playing)
         const currentIndex = computed(() => store.state.currentIndex)
         const playList = computed(() => store.state.playList)
+        const disableCls = computed(() => {
+            return songReady.value ? '' : 'disable'
+        })
 
         const playIcon = computed(() => {
             return playing.value ? 'icon-pause' : 'icon-play'
@@ -76,12 +82,17 @@ export default {
             if (!newSong.id || !newSong.url) {
                 return
             }
+            songReady.value = false
             const audioEl = audioRef.value
             audioEl.src = newSong.url
             audioEl.play()
         })
 
         watch(playing, (newPlaying) => {
+            if (!songReady.value) {
+                return
+            }
+
             const audioEl = audioRef.value
 
             if (newPlaying) {
@@ -96,7 +107,22 @@ export default {
         }
 
         function togglePlay() {
+            if (!songReady.value) {
+               return
+            }
+
             store.commit('setPlayingState', !playing.value)
+        }
+
+        function ready() {
+            if (songReady.value) {
+                return
+            }
+            songReady.value = true
+        }
+
+        function error() {
+            songReady.value = true
         }
 
         function pause() {
@@ -106,7 +132,7 @@ export default {
         function prev() {
             const list = playList.value
 
-            if (!list.length) {
+            if (!songReady.value || !list.length) {
                 return
             }
 
@@ -129,7 +155,7 @@ export default {
 
         function next() {
             const list = playList.value
-            if (!list.length) {
+            if (!songReady.value || !list.length) {
                 return
             }
 
@@ -162,9 +188,12 @@ export default {
             goBack,
             playIcon,
             togglePlay,
+            ready,
+            error,
             pause,
             prev,
-            next
+            next,
+            disableCls
         }
     }
 }
