@@ -56,8 +56,8 @@ function post(url, params) {
   return axios.post(url, params, {
     headers: {
       referer: 'https://y.qq.com/',
-      origin: 'https://y.qq.com/',
-      'Content-Type': 'application/x-www-form-urlencoded'
+      origin: 'https://y.qq.com/'
+      // 'Content-Type': 'application/x-www-form-urlencoded'
     }
   })
 }

@@ -11,7 +11,7 @@
 
 <script>
 import { getSingerDetail } from '@/service/singer'
-// import { processSongs } from '@/service/song'
+import { processSongs } from '@/service/song'
 import MusicList from '@/components/music-list/music-list'
 import storage from 'good-storage'
 import { SINGER_KEY } from '@/assets/js/constant'
@@ -75,9 +75,8 @@ export default {
             return
         }
         const result = await getSingerDetail(this.computedSinger)
-        // const songs = await processSongs(result.songs)
-        // console.log(20, songs)
-        this.songs = result.songs
+        const songs = await processSongs(result.songs)
+        this.songs = songs
         this.loading = false
     }
 }
