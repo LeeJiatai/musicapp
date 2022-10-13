@@ -4,7 +4,7 @@
 
 <script>
 import { getSingerDetail } from '@/service/singer'
-// import { processSongs } from '@/service/song'
+import { processSongs } from '@/service/song'
 
 export default {
     name: 'singer-detail',
@@ -18,8 +18,8 @@ export default {
 
     async created() {
         const result = await getSingerDetail(this.singer)
-        // const songs = await processSongs(result.songs)
-        console.log(20, result)
+        const songs = await processSongs(result.songs)
+        console.log(20, songs)
     }
 }
 </script>

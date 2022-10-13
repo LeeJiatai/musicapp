@@ -8,15 +8,14 @@ export function processSongs(songs) {
     return get('/api/getSongsUrl', {
         mid: songs.map(song => song.mid)
     }).then(result => {
-        console.log(11, result)
-        // const map = result.map
+        const map = result.map
 
-        // return songs.map(song => {
-        //     song.url = map[song.mid]
+        return songs.map(song => {
+            song.url = map[song.mid]
 
-        //     return song
-        // }).filter(song => {
-        //     return song.url && song.url.indexOf('vkey') > -1
-        // })
+            return song
+        }).filter(song => {
+            return song.url && song.url.indexOf('vkey') > -1
+        })
     })
 }
