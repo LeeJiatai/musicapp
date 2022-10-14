@@ -20,8 +20,16 @@
                 <h2 class="subtitle">{{ currentSong.singer }}</h2>
             </div>
 
-            <div class="middle">
-                <div class="middle-l">
+            <div
+                class="middle"
+                @touchstart.prevent="onMiddleTouchStart"
+                @touchmove.prevent="onMiddleTouchMove"
+                @touchend.prevent="onMiddleTouchEnd"
+            >
+                <div
+                    class="middle-l"
+                    :style="middleLStyle"
+                >
                     <div class="cd-wrapper">
                         <div
                             class="cd"
@@ -43,6 +51,7 @@
 
                 <Scroll
                     class="middle-r"
+                    :style="middleRStyle"
                     ref="lyricScrollRef"
                 >
                     <div class="lyric-wrapper">
@@ -68,6 +77,11 @@
             </div>
 
             <div class="bottom">
+                <div class="dot-wrapper">
+                    <span class="dot" :class="{'active':currentShow==='cd'}"></span>
+                    <span class="dot" :class="{'active':currentShow==='lyric'}"></span>
+                </div>
+
                 <div class="progress-wrapper">
                     <span class="time time-l">{{ formateTime(currentTime) }}</span>
                     <div class="progress-bar-wrapper">
@@ -125,6 +139,7 @@ import useFavorite from './use-favorite'
 import useCd from './use-cd'
 import useLyric from './use-lyric'
 import ProgressBar from './progress-bar'
+import useMiddleInteractive from './use-middle-interactive'
 import Scroll from '@/components/base/scroll/scroll'
 import { formateTime } from '@/assets/js/util'
 import { PLAY_MODE } from '@/assets/js/constant'
@@ -163,6 +178,7 @@ export default {
             songReady,
             currentTime
         })
+        const { currentShow, middleLStyle, middleRStyle, onMiddleTouchStart, onMiddleTouchMove, onMiddleTouchEnd } = useMiddleInteractive()
         const playIcon = computed(() => {
             return playing.value ? 'icon-pause' : 'icon-play'
         })
@@ -340,7 +356,14 @@ export default {
             lyricScrollRef,
             lyricListRef,
             pureMusicLyric,
-            playingLyric
+            playingLyric,
+            // middle
+            currentShow,
+            middleLStyle,
+            middleRStyle,
+            onMiddleTouchStart,
+            onMiddleTouchMove,
+            onMiddleTouchEnd
         }
     }
 }
@@ -498,6 +521,25 @@ export default {
             position: absolute;
             bottom: 50px;
             width: 100%;
+
+            .dot-wrapper {
+                text-align: center;
+                font-size: 0;
+                .dot {
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin: 0 4px;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: $color-text-l;
+                    &.active {
+                        width: 20px;
+                        border-radius: 5px;
+                        background: $color-text-ll;
+                    }
+                }
+            }
 
             .progress-wrapper {
                 display: flex;
