@@ -88,6 +88,11 @@ export default {
             const barWidth = this.$el.clientWidth - progressBtnWidth
             const progress = this.$refs.progress.clientWidth / barWidth
             this.$emit('progress-chenged', progress)
+        },
+
+        setOffset(progress) {
+            const barWidth = this.$el.clientWidth - progressBtnWidth
+            this.offset = barWidth * progress
         }
     },
 

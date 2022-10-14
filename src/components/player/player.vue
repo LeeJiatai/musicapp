@@ -1,5 +1,8 @@
 <template>
-    <div class="player">
+    <div
+        class="player"
+        v-show="playList.length"
+    >
         <div
             class="normal-player"
             v-show="fullScreen"
@@ -86,6 +89,7 @@
                     <span class="time time-l">{{ formateTime(currentTime) }}</span>
                     <div class="progress-bar-wrapper">
                         <ProgressBar
+                            ref="barRef"
                             :progress="progress"
                             @progress-changing="onProgressChanging"
                             @progress-chenged="onProgressChanged"
@@ -120,6 +124,10 @@
                 </div>
             </div>
         </div>
+        <MiniPlayer
+            :progress="progress"
+            :togglePlay="togglePlay"
+        ></MiniPlayer>
         <audio
             ref="audioRef"
             @pause="pause"
@@ -132,13 +140,14 @@
 </template>
 
 <script>
-import { computed, watch, ref } from 'vue'
+import { computed, watch, ref, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import useMode from './use-mode'
 import useFavorite from './use-favorite'
 import useCd from './use-cd'
 import useLyric from './use-lyric'
 import ProgressBar from './progress-bar'
+import MiniPlayer from './mini-player'
 import useMiddleInteractive from './use-middle-interactive'
 import Scroll from '@/components/base/scroll/scroll'
 import { formateTime } from '@/assets/js/util'
@@ -149,11 +158,13 @@ export default {
 
     components: {
         ProgressBar,
-        Scroll
+        Scroll,
+        MiniPlayer
     },
 
     setup() {
         const audioRef = ref(null)
+        const barRef = ref(null)
         const songReady = ref(false)
         const currentTime = ref(0)
         let progressChanging = false
@@ -207,6 +218,13 @@ export default {
             } else {
                 audioEl.pause()
                 stopLyric()
+            }
+        })
+
+        watch(fullScreen, async (newFullScreen) => {
+            if (newFullScreen) {
+                await nextTick()
+                barRef.value.setOffset(progress.value)
             }
         })
 
@@ -325,6 +343,7 @@ export default {
 
         return {
             fullScreen,
+            playList,
             currentSong,
             audioRef,
             goBack,
@@ -343,6 +362,7 @@ export default {
             toggleFavorite,
             currentTime,
             progress,
+            barRef,
             updateTime,
             formateTime,
             onProgressChanging,
