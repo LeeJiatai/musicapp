@@ -1,7 +1,6 @@
 import storage from 'good-storage'
 
 function inertArray(arr, val, compare, maxLen) {
-    console.log(4, arr, val, compare, maxLen)
     const index = arr.findIndex(compare)
 
     if (index > -1) {
