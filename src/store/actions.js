@@ -2,7 +2,6 @@ import { PLAY_MODE } from '@/assets/js/constant'
 import { shuffe } from '@/assets/js/util'
 
 export function selectPlay({ commit }, { list, index }) {
-    console.log(5, PLAY_MODE.sequence)
     commit('setPlayMode', PLAY_MODE.sequence)
     commit('setSequenceList', list)
     commit('setPlayingState', true)
