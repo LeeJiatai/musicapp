@@ -18,9 +18,20 @@
                 </div>
             </div>
 
-            <div class="slider-wrapper">
-                <div class="name">{{ currentSong.name }}</div>
-                <div class="desc">{{ currentSong.singer }}</div>
+            <div
+                ref="sliderWrapperRef"
+                class="slider-wrapper"
+            >
+                <div class="slider-group">
+                    <div
+                        class="slider-page"
+                        v-for="song in playList"
+                        :key="song.id"
+                    >
+                        <div class="name">{{ song.name }}</div>
+                        <div class="desc">{{ song.singer }}</div>
+                    </div>
+                </div>
             </div>
 
             <div class="control">
@@ -43,6 +54,7 @@
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 import useCd from './use-cd'
+import useMiniSlider from './use-mini-slider'
 import ProgressCircle from './progress-circle.vue'
 
 export default {
@@ -65,6 +77,9 @@ export default {
         const fullScreen = computed(() => store.state.fullScreen)
         const currentSong = computed(() => store.getters.currentSong)
         const playing = computed(() => store.state.playing)
+        const playList = computed(() => store.state.playList)
+
+        const { sliderWrapperRef } = useMiniSlider()
 
         const miniPlayIcon = computed(() => {
             return playing.value ? 'icon-pause-mini' : 'icon-play-mini'
@@ -81,10 +96,13 @@ export default {
             currentSong,
             showNormalPlayer,
             miniPlayIcon,
+            playList,
             // cd
             cdCls,
             cdRef,
-            cdImageRef
+            cdImageRef,
+            // mini-slider
+            sliderWrapperRef
         }
     }
 }
@@ -124,16 +142,35 @@ export default {
         }
     }
 
-    .name {
-        margin-bottom: 2px;
-        @include no-wrap();
-        font-size: $font-size-medium;
-        color: $color-text;
-    }
-    .desc {
-        @include no-wrap();
-        font-size: $font-size-small;
-        color: $color-text-d;
+    .slider-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+        line-height: 20px;
+        overflow: hidden;
+        .slider-group {
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            .slider-page {
+                display: inline-block;
+                width: 100%;
+                transform: translate3d(0, 0, 0);
+                backface-visibility: hidden;
+                .name {
+                    margin-bottom: 2px;
+                    @include no-wrap();
+                    font-size: $font-size-medium;
+                    color: $color-text;
+                }
+                .desc {
+                    @include no-wrap();
+                    font-size: $font-size-small;
+                    color: $color-text-d;
+                }
+            }
+        }
     }
 
     .control {
