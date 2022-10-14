@@ -38,6 +38,7 @@ export default function useMiniSlider() {
 
                     sliderVal.on('slidePageChanged', ({ pageX }) => {
                         store.commit('setCurrentIndex', pageX)
+                        store.commit('setPlayingState', true)
                     })
                 } else {
                     sliderVal.refresh()
