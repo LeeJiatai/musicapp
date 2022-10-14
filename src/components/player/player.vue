@@ -35,6 +35,10 @@
                             />
                         </div>
                     </div>
+
+                    <div class="playing-lyric-wrapper">
+                        <div class="playing-lyric">{{ playingLyric }}</div>
+                    </div>
                 </div>
 
                 <Scroll
@@ -54,6 +58,10 @@
                             >
                                 {{ line.txt }}
                             </p>
+                        </div>
+
+                        <div class="pure-music" v-show="pureMusicLyric">
+                            {{ pureMusicLyric }}
                         </div>
                     </div>
                 </Scroll>
@@ -151,7 +159,7 @@ export default {
         const { modeIcon, changeMode } = useMode()
         const { getFavoriteIcon, toggleFavorite } = useFavorite()
         const { cdCls, cdRef, cdImageRef } = useCd()
-        const { currentLyric, currentLineNum, playLyric, stopLyric, lyricScrollRef, lyricListRef } = useLyric({
+        const { currentLyric, currentLineNum, playLyric, stopLyric, lyricScrollRef, lyricListRef, pureMusicLyric, playingLyric } = useLyric({
             songReady,
             currentTime
         })
@@ -330,7 +338,9 @@ export default {
             currentLyric,
             currentLineNum,
             lyricScrollRef,
-            lyricListRef
+            lyricListRef,
+            pureMusicLyric,
+            playingLyric
         }
     }
 }
@@ -407,8 +417,7 @@ export default {
             white-space: nowrap;
             font-size: 0;
             .middle-l {
-                // display: inline-block;
-                display: none;
+                display: inline-block;
                 vertical-align: top;
                 position: relative;
                 width: 100%;
@@ -439,6 +448,19 @@ export default {
                         .playing {
                             animation: rotate 20s linear infinite
                         }
+                    }
+                }
+
+                .playing-lyric-wrapper {
+                    width: 80%;
+                    margin: 30px auto 0 auto;
+                    overflow: hidden;
+                    text-align: center;
+                    .playing-lyric {
+                        height: 20px;
+                        line-height: 20px;
+                        font-size: $font-size-medium;
+                        color: $color-text-l;
                     }
                 }
             }
