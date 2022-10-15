@@ -46,7 +46,11 @@
                                     <i :class="getFavoriteIcon(song)"></i>
                                 </span>
 
-                                <span class="delete" @click.stop="removeSong(song)">
+                                <span
+                                    class="delete"
+                                    @click.stop="removeSong(song)"
+                                    :class="{disable: removing}"
+                                >
                                     <i class="icon-delete"></i>
                                 </span>
                             </li>
@@ -85,6 +89,7 @@ export default {
 
     setup() {
         const visible = ref(false)
+        const removing = ref(false)
         const scrollRef = ref(null)
         const listRef = ref(null)
         const store = useStore()
@@ -96,8 +101,8 @@ export default {
         const { modeIcon, changeMode, modeText } = useMode()
         const { getFavoriteIcon, toggleFavorite } = useFavorite()
 
-        watch(currentSong, async () => {
-            if (!visible.value) {
+        watch(currentSong, async (newSong) => {
+            if (!visible.value || newSong.id) {
                 return
             }
             await nextTick()
@@ -131,7 +136,15 @@ export default {
         }
 
         function removeSong(song) {
+            if (removing.value) {
+                return
+            }
+            removing.value = true
             store.dispatch('removeSong', song)
+
+            setTimeout(() => {
+                removing.value = false
+            }, 300)
         }
 
         function refreshScroll() {
@@ -143,6 +156,10 @@ export default {
                 return currentSong.value.id === song.id
             })
 
+            if (index === -1) {
+                return
+            }
+
             const target = listRef.value.$el.children[index]
 
             scrollRef.value.scroll.scrollToElement(target)
@@ -150,6 +167,7 @@ export default {
 
         return {
             visible,
+            removing,
             playList,
             sequenceList,
             getCurrentIcon,
