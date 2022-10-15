@@ -42,6 +42,7 @@
             <div class="song-list-wrapper">
                 <SongList
                     :songs="songs"
+                    :rank="rank"
                     @select="selectItem"
                 ></SongList>
             </div>
@@ -75,6 +76,10 @@ export default {
         noResultText: {
             type: String,
             default: '抱歉，没有找到可播放的歌曲'
+        },
+        rank: {
+            type: Boolean,
+            default: false
         }
     },
 

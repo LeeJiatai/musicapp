@@ -6,6 +6,7 @@ const Toplist = () => import('@/views/top-list')
 const Search = () => import('@/views/search')
 const singerDetail = () => import('@/views/singer-detail')
 const Album = () => import('@/views/album')
+const TopDetail = () => import('@/views/top-detail')
 
 const routes = [
   {
@@ -37,7 +38,13 @@ const routes = [
 
   {
     path: '/top-list',
-    component: Toplist
+    component: Toplist,
+    children: [
+      {
+        path: ':id',
+        component: TopDetail
+      }
+    ]
   },
 
   {
