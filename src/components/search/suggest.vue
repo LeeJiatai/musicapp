@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, nextTick } from 'vue'
 import { search } from '@/service/search'
 import { processSongs } from '@/service/song'
 import usePullUpLoad from './use-pull-up'
@@ -66,8 +66,13 @@ export default {
         const page = ref(1)
         const loadingText = ref('')
         const noResultRext = ref('抱歉，暂无搜索结果')
+        const manualLoading = ref(false)
 
-        const { rootRef, isPullUpLoad } = usePullUpLoad(searchMore)
+        const preventPullUpload = computed(() => {
+            return loading.value || manualLoading.value
+        })
+
+        const { scroll, rootRef, isPullUpLoad } = usePullUpLoad(searchMore, preventPullUpload)
 
         const loading = computed(() => {
             return !singer.value && !songs.value.length
@@ -90,6 +95,10 @@ export default {
         })
 
         async function searchFirst() {
+            if (!props.query) {
+                return
+            }
+
             page.value = 1
             songs.value = []
             singer.value = null
@@ -99,10 +108,13 @@ export default {
             songs.value = await processSongs(result.songs)
             singer.value = result.singer
             hasMore.value = result.hasMore
+
+            await nextTick()
+            makeItScrollable()
         }
 
         async function searchMore() {
-            if (!hasMore.value) {
+            if (!hasMore.value || !props.query) {
                 return
             }
 
@@ -111,6 +123,17 @@ export default {
             const result = await search(props.query, page.value, props.showSinger)
             songs.value = songs.value.concat(await processSongs(result.songs))
             hasMore.value = result.hasMore
+
+            await nextTick()
+            makeItScrollable()
+        }
+
+        async function makeItScrollable() {
+            if (scroll.value.maxScrollY >= -1) {
+                manualLoading.value = true
+                await searchMore()
+                manualLoading.value = false
+            }
         }
 
         return {
