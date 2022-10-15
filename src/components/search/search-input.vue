@@ -3,6 +3,7 @@
         <i class="icon-search"></i>
         <input
             class="input-inner"
+            :placeholder="placeholder"
             v-model="query"
         />
         <i
@@ -19,7 +20,11 @@ export default {
     name: 'search-input',
 
     props: {
-        modelValue: String
+        modelValue: String,
+        placeholder: {
+            type: String,
+            default: '搜索歌曲、歌手'
+        }
     },
 
     data() {
