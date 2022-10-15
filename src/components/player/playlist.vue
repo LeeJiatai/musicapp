@@ -16,7 +16,7 @@
                             ></i>
                             <span class="text">{{ modeText }}</span>
 
-                            <span class="clear">
+                            <span class="clear" @click="showClear">
                                 <i class="icon-clear"></i>
                             </span>
                         </h1>
@@ -68,6 +68,13 @@
                         <span>关闭</span>
                     </div>
                 </div>
+
+                <Confirm
+                    ref="confirmRef"
+                    text="是否清空播放列表？"
+                    confirmBtnText="清空"
+                    @confirm="confirmClear"
+                ></Confirm>
             </div>
         </transition>
     </teleport>
@@ -75,6 +82,7 @@
 
 <script>
 import Scroll from '@/components/base/scroll/scroll'
+import Confirm from '@/components/base/confirm/confirm'
 import { computed, ref, nextTick, watch } from 'vue'
 import { useStore } from 'vuex'
 import useMode from './use-mode'
@@ -84,13 +92,15 @@ export default {
     name: 'play-list',
 
     components: {
-        Scroll
+        Scroll,
+        Confirm
     },
 
     setup() {
         const visible = ref(false)
         const removing = ref(false)
         const scrollRef = ref(null)
+        const confirmRef = ref(null)
         const listRef = ref(null)
         const store = useStore()
         const playList = computed(() => store.state.playList)
@@ -142,6 +152,10 @@ export default {
             removing.value = true
             store.dispatch('removeSong', song)
 
+            if (!playList.value.length) {
+                hide()
+            }
+
             setTimeout(() => {
                 removing.value = false
             }, 300)
@@ -165,6 +179,15 @@ export default {
             scrollRef.value.scroll.scrollToElement(target)
         }
 
+        function showClear() {
+            confirmRef.value.show()
+        }
+
+        function confirmClear() {
+            store.dispatch('clearSongList')
+            hide()
+        }
+
         return {
             visible,
             removing,
@@ -174,9 +197,12 @@ export default {
             hide,
             show,
             listRef,
+            confirmRef,
             scrollRef,
             removeSong,
             selectItem,
+            showClear,
+            confirmClear,
             // paly-mode
             modeIcon,
             changeMode,
