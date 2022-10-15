@@ -1,6 +1,6 @@
-import { h, mergeProps, withCtx, renderSlot, ref, watch, nextTick, computed } from 'vue'
-import Scroll from '@/components/base/scroll/scroll'
+import { h, mergeProps, withCtx, renderSlot, ref, computed, watch, nextTick } from 'vue'
 import { useStore } from 'vuex'
+import Scroll from '@/components/base/scroll/scroll'
 
 export default {
     name: 'wrap-scroll',
@@ -10,9 +10,7 @@ export default {
     emits: Scroll.emits,
 
     render(ctx) {
-        return h(Scroll, mergeProps({
-                ref: 'scrollRef'
-            }, ctx.$props, {
+        return h(Scroll, mergeProps({ ref: 'scrollRef' }, ctx.$props, {
             onScroll: (e) => {
                 ctx.$emit('scroll', e)
             }
@@ -34,7 +32,7 @@ export default {
 
         watch(playList, async () => {
             await nextTick()
-            scroll.value.refresh()
+            scrollRef.value.scroll.refresh()
         })
 
         return {
