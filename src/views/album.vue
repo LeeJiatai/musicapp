@@ -1,5 +1,5 @@
 <template>
-    <div class="singer-detail">
+    <div class="album">
         <MusicList
             :songs="songs"
             :title="title"
@@ -11,15 +11,14 @@
 
 <script>
 import createDetailComponent from '@/assets/js/create-detail-component'
-import { getSingerDetail } from '@/service/singer'
-import { SINGER_KEY } from '@/assets/js/constant'
+import { getAlbum } from '@/service/recommend'
+import { ALBUM_KEY } from '@/assets/js/constant'
 
-export default createDetailComponent('singer-detail', SINGER_KEY, getSingerDetail)
-
+export default createDetailComponent('album', ALBUM_KEY, getAlbum)
 </script>
 
 <style lang="scss" scoped>
-.singer-detail {
+.album {
     position: fixed;
     z-index: 10;
     top: 0;
