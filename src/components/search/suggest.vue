@@ -9,6 +9,7 @@
             <li
                 class="suggest-item"
                 v-if="singer"
+                @click="selectSinger(singer)"
             >
                 <div class="icon">
                     <i class="icon-mine"></i>
@@ -23,6 +24,7 @@
                 class="suggest-item"
                 v-for="song in songs"
                 :key="song.id"
+                @click="selectSong(song)"
             >
                 <div class="icon">
                     <i class="icon-music"></i>
@@ -59,7 +61,9 @@ export default {
         }
     },
 
-    setup(props) {
+    emits: ['select-song', 'select-singer'],
+
+    setup(props, { emit }) {
         const singer = ref(null)
         const songs = ref([])
         const hasMore = ref(true)
@@ -136,11 +140,21 @@ export default {
             }
         }
 
+        function selectSong(song) {
+            emit('select-song', song)
+        }
+
+        function selectSinger(singer) {
+            emit('select-singer', singer)
+        }
+
         return {
             singer,
             songs,
             hasMore,
             page,
+            selectSinger,
+            selectSong,
             // loading
             loading,
             loadingText,
