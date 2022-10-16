@@ -60,6 +60,13 @@
                     >
                     </suggest>
                 </div>
+
+                <Message ref="messageRef">
+                    <div class="message-title">
+                        <i class="icon-ok"></i>
+                        <span class="text">1首歌曲已经添加到播放列表</span>
+                    </div>
+                </Message>
             </div>
         </transition>
     </teleport>
@@ -72,6 +79,7 @@ import Suggest from '@/components/search/suggest'
 import Switches from '@/components/base/switches/switches'
 import SongList from '@/components/base/song-list/song-list'
 import SearchList from '@/components/base/search-list/search-list'
+import Message from '@/components/base/message/message'
 import { ref, computed, watch, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import useSearchHistory from '@/components/search/use-search-history'
@@ -85,7 +93,8 @@ export default {
         Suggest,
         Switches,
         SongList,
-        SearchList
+        SearchList,
+        Message
     },
 
     setup() {
@@ -93,6 +102,7 @@ export default {
         const query = ref('')
         const currentIndex = ref(0)
         const scrollRef = ref(null)
+        const messageRef = ref(null)
 
         const store = useStore()
         const searchHistory = computed(() => store.state.searchHistory)
@@ -130,14 +140,20 @@ export default {
 
         function addSong(song) {
             store.dispatch('addSong', song)
+            showMessage()
         }
 
         function refreshScroll() {
             scrollRef.value.scroll.refresh()
         }
 
+        function showMessage() {
+            messageRef.value.show()
+        }
+
         return {
             scrollRef,
+            messageRef,
             visible,
             query,
             currentIndex,
@@ -207,6 +223,21 @@ export default {
         top: 124px;
         bottom: 0;
         width: 100%;
+    }
+}
+
+.message-title {
+    text-align: center;
+    padding: 18px 0;
+    font-size: 0;
+    .icon-ok {
+        font-size: $font-size-medium;
+        color: $color-theme;
+        margin-right: 4px;
+    }
+    .text {
+        font-size: $font-size-medium;
+        color: $color-text;
     }
 }
 </style>
