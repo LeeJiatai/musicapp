@@ -58,7 +58,7 @@
                     </Scroll>
 
                     <div class="list-add">
-                        <div class="add">
+                        <div class="add" @click="showAddSong">
                             <i class="icon-add"></i>
                             <span class="text">添加歌曲到队列</span>
                         </div>
@@ -75,6 +75,10 @@
                     confirmBtnText="清空"
                     @confirm="confirmClear"
                 ></Confirm>
+
+                <AddSong
+                    ref="addSongRef"
+                ></AddSong>
             </div>
         </transition>
     </teleport>
@@ -83,6 +87,7 @@
 <script>
 import Scroll from '@/components/base/scroll/scroll'
 import Confirm from '@/components/base/confirm/confirm'
+import AddSong from '@/components/add-song/add-song'
 import { computed, ref, nextTick, watch } from 'vue'
 import { useStore } from 'vuex'
 import useMode from './use-mode'
@@ -93,7 +98,8 @@ export default {
 
     components: {
         Scroll,
-        Confirm
+        Confirm,
+        AddSong
     },
 
     setup() {
@@ -102,6 +108,7 @@ export default {
         const scrollRef = ref(null)
         const confirmRef = ref(null)
         const listRef = ref(null)
+        const addSongRef = ref(null)
         const store = useStore()
         const playList = computed(() => store.state.playList)
         const sequenceList = computed(() => store.state.sequenceList)
@@ -188,6 +195,10 @@ export default {
             hide()
         }
 
+        function showAddSong() {
+            addSongRef.value.show()
+        }
+
         return {
             visible,
             removing,
@@ -197,12 +208,14 @@ export default {
             hide,
             show,
             listRef,
+            addSongRef,
             confirmRef,
             scrollRef,
             removeSong,
             selectItem,
             showClear,
             confirmClear,
+            showAddSong,
             // paly-mode
             modeIcon,
             changeMode,
