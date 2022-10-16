@@ -60,7 +60,9 @@ const routes = [
   },
   {
     path: '/user',
-    component: UserCenter
+    components: {
+      user: UserCenter
+    }
   }
 ]
 
