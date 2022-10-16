@@ -11,7 +11,11 @@
                 @click="selectItem(item)"
             >
                 <span class="text">{{ item }}</span>
-                <span class="icon" @click.stop="deleteItem(item)">
+                <span
+                    class="icon"
+                    v-if="showDelete"
+                    @click.stop="deleteItem(item)"
+                >
                     <i class="icon-delete"></i>
                 </span>
             </li>
@@ -27,6 +31,11 @@ export default {
         searches: {
             type: Array,
             default: () => ([])
+        },
+
+        showDelete: {
+            type: Boolean,
+            default: true
         }
     },
 

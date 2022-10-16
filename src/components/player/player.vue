@@ -162,6 +162,7 @@ import ProgressBar from './progress-bar'
 import MiniPlayer from './mini-player'
 import useAnimation from './use-animation'
 import useMiddleInteractive from './use-middle-interactive'
+import usePlayHistory from './use-play-history'
 import Scroll from '@/components/base/scroll/scroll'
 import { formateTime } from '@/assets/js/util'
 import { PLAY_MODE } from '@/assets/js/constant'
@@ -204,6 +205,7 @@ export default {
         })
         const { currentShow, middleLStyle, middleRStyle, onMiddleTouchStart, onMiddleTouchMove, onMiddleTouchEnd } = useMiddleInteractive()
         const { cdWrapperRef, enter, afterEnter, leave, afterLeave } = useAnimation()
+        const { savePlay } = usePlayHistory()
         const playIcon = computed(() => {
             return playing.value ? 'icon-pause' : 'icon-play'
         })
@@ -261,6 +263,7 @@ export default {
             }
             songReady.value = true
             playLyric()
+            savePlay(currentSong.value)
         }
 
         function error() {
