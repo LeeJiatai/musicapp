@@ -39,7 +39,7 @@ export default function useAnimation() {
     function afterEnter() {
         entering = false
         animations.unregisterAnimation('move')
-        cdWrapperRef.value.animation = ''
+        cdWrapperRef.value.style.animation = ''
     }
 
     function leave(el, done) {
