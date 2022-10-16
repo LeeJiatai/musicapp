@@ -4,6 +4,7 @@ const Recommend = () => import('@/views/recommend')
 const Singer = () => import('@/views/singer')
 const Toplist = () => import('@/views/top-list')
 const Search = () => import('@/views/search')
+const UserCenter = () => import('@/views/user-center')
 const singerDetail = () => import('@/views/singer-detail')
 const Album = () => import('@/views/album')
 const TopDetail = () => import('@/views/top-detail')
@@ -56,6 +57,10 @@ const routes = [
         component: singerDetail
       }
     ]
+  },
+  {
+    path: '/user',
+    component: UserCenter
   }
 ]
 
